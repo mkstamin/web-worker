@@ -1,49 +1,17 @@
 name: CI/CD with Super Linter
 
-on:
-  push:
-    branches:
-      - main
+on: push
 
 jobs:
-  lint:
+  super-lint:
+    name: Link code base
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Run linting
-      uses: github/super-linter@v3
-      env:
-        VALIDATE_ALL_CODEBASE: true
-
-  build-and-deploy:
-    runs-on: ubuntu-latest
-
-    needs: lint
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build
-      run: npm run build
-
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: build
+      - name: Run Super-Linter
+        uses: github/super-linter@v3
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
